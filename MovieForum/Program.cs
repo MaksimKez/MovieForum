@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using MovieForum.Data;
+
 namespace MovieForum;
 
 public class Program
@@ -5,6 +8,11 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        builder.Services.AddDbContext<ApplicationDbContext>(x =>
+        {
+            x.UseNpgsql(builder.Configuration.GetConnectionString("ExpenseTrackerDb"));
+        });
 
         // Add services to the container.
         builder.Services.AddAuthorization();
