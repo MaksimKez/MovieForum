@@ -40,7 +40,4 @@ public class CommentRepository : ICommentRepository
         
         return FilterByDate(comments, from, to);
     }
-    
-    public 
-    
 }
