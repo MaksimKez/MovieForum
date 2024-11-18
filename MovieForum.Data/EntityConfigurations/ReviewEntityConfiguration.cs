@@ -36,6 +36,7 @@ public class ReviewEntityConfiguration : IEntityTypeConfiguration<ReviewEntity>
 
         builder.HasMany(r => r.Comments)
             .WithOne(c => c.Review)
-            .HasForeignKey(c => c.ReviewId);
+            .HasForeignKey(c => c.ReviewId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

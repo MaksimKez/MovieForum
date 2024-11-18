@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieForum.Data.Interfaces"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieForum.Data", "MovieForum.Data\MovieForum.Data.csproj", "{F08D0D28-D308-4EB3-AA6A-4C70B1BE0F6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieForum.DataAccess", "MovieForum.DataAccess\MovieForum.DataAccess.csproj", "{072F793C-207A-4574-8129-C1923A2E3DA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{F08D0D28-D308-4EB3-AA6A-4C70B1BE0F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F08D0D28-D308-4EB3-AA6A-4C70B1BE0F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F08D0D28-D308-4EB3-AA6A-4C70B1BE0F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{072F793C-207A-4574-8129-C1923A2E3DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{072F793C-207A-4574-8129-C1923A2E3DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{072F793C-207A-4574-8129-C1923A2E3DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{072F793C-207A-4574-8129-C1923A2E3DA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

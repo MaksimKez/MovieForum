@@ -15,7 +15,7 @@ public class CommentEntityConfiguration : IEntityTypeConfiguration<CommentEntity
         builder.Property(c => c.Text)
             .HasMaxLength(1000);
 
-        builder.Property(c => c.IsConsonant)
+        builder.Property(c => c.IsPositive)
             .IsRequired();
 
         builder.Property(c => c.PublishedAt);
