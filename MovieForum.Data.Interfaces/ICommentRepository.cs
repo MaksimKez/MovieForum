@@ -4,7 +4,14 @@ namespace MovieForum.Data.Interfaces;
 
 public interface ICommentRepository
 {
-    public Task<IEnumerable<CommentEntity>> GetByReviewIdAsync(Guid reviewId, DateTime from, DateTime to);
-    public Task<IEnumerable<CommentEntity>> GetByDateAsync(Guid userId, DateTime from, DateTime to);
-    public Task<CommentEntity?> GetByIdAsync(Guid id);
+    Task<IEnumerable<CommentEntity>> GetByReviewIdAsync(Guid reviewId, DateTime from, DateTime to);
+    Task<IEnumerable<CommentEntity>> GetByDateAndUserIdAsync(Guid userId, DateTime from, DateTime to); 
+    Task<CommentEntity?> GetByIdAsync(Guid id);
+    Task<IEnumerable<CommentEntity>> GetByIsPositiveStatusAndReviewIdAsync(bool isPositive, Guid reviewId);
+    
+    
+    Task<Guid> AddAsync(CommentEntity comment);   
+    Task UpdateAsync(CommentEntity comment);
+    Task<bool> DeleteAsync(Guid id);
+    
 }

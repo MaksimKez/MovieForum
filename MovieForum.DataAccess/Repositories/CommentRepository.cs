@@ -17,9 +17,41 @@ public class CommentRepository : ICommentRepository
     public async Task<CommentEntity?> GetByIdAsync(Guid id)
     {
         var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
-        return comment ?? null;
+        return comment;
     }
-    
+
+    public async Task<IEnumerable<CommentEntity>> GetByIsPositiveStatusAndReviewIdAsync(bool isPositive, Guid reviewId)
+    {
+        var comments = await _context.Comments.Where(c => c.IsPositive == isPositive && c.ReviewId == reviewId).ToListAsync();
+        return comments; 
+    }
+
+    public async Task<Guid> AddAsync(CommentEntity comment)
+    {
+        await _context.Comments.AddAsync(comment);
+        await _context.SaveChangesAsync();
+        return comment.Id;
+    }
+
+    public async Task UpdateAsync(CommentEntity comment)
+    {
+        _context.Comments.Update(comment);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var commentToDelete = await _context.Comments.FirstOrDefaultAsync();
+        if (commentToDelete == null)
+        {
+            return false;
+        }
+        
+        _context.Comments.Remove(commentToDelete);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     private IEnumerable<CommentEntity> FilterByDate(IEnumerable<CommentEntity> commentsToFilter,
         DateTime from, DateTime to)
     {
@@ -27,7 +59,7 @@ public class CommentRepository : ICommentRepository
         return commentsToFilter;
     }
 
-    public async Task<IEnumerable<CommentEntity>> GetByDateAsync(Guid userId, DateTime from, DateTime to)
+    public async Task<IEnumerable<CommentEntity>> GetByDateAndUserIdAsync(Guid userId, DateTime from, DateTime to)
     {
         var comments = await _context.Comments.Where(c => c.UserId == userId).ToListAsync();
         
@@ -39,5 +71,7 @@ public class CommentRepository : ICommentRepository
         var comments = await _context.Comments.Where(c => c.ReviewId == reviewId).ToListAsync();
         
         return FilterByDate(comments, from, to);
+        
+        // todo попроавить приколы с непонятными и/или не нужными методами, доделать дальше
     }
 }
