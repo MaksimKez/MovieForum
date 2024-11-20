@@ -5,6 +5,8 @@ namespace MovieForum.Data.Entities;
 public class ReviewEntity
 {
     public Guid Id { get; set; }
+    
+    // overall movie rating from review by author
     public RatingEnum Rating { get; set; }
     public string Title { get; set; }
     public string Text { get; set; }
