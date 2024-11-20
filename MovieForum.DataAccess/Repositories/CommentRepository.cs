@@ -33,10 +33,17 @@ public class CommentRepository : ICommentRepository
         return comment.Id;
     }
 
-    public async Task UpdateAsync(CommentEntity comment)
+    public async Task<bool> UpdateAsync(CommentEntity comment)
     {
+        var commentToUpdate = await _context.Comments.FirstOrDefaultAsync(c => c.Id == comment.Id);
+        if (commentToUpdate == null)
+        {
+            return false;
+        }
+        
         _context.Comments.Update(comment);
         await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -71,7 +78,5 @@ public class CommentRepository : ICommentRepository
         var comments = await _context.Comments.Where(c => c.ReviewId == reviewId).ToListAsync();
         
         return FilterByDate(comments, from, to);
-        
-        // todo попроавить приколы с непонятными и/или не нужными методами, доделать дальше
     }
 }

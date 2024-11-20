@@ -11,7 +11,7 @@ public interface ICommentRepository
     
     
     Task<Guid> AddAsync(CommentEntity comment);   
-    Task UpdateAsync(CommentEntity comment);
+    Task<bool> UpdateAsync(CommentEntity comment);
     Task<bool> DeleteAsync(Guid id);
     
 }
