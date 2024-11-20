@@ -9,4 +9,8 @@ public interface IMovieRepository
     Task<IEnumerable<MovieEntity>> GetByReleaseDate(DateTime from, DateTime to);
     Task<IEnumerable<MovieEntity>> GetByRating(double from, double to);
     Task<IEnumerable<MovieEntity>> GetTop100Async();
+    
+    Task<Guid> AddAsync(MovieEntity movie);
+    Task<bool> UpdateAsync(MovieEntity movie);
+    Task<bool> DeleteAsync(Guid id);
 }

@@ -43,4 +43,37 @@ public class MovieRepository : IMovieRepository
         var movies = await _context.Movies.OrderByDescending(m => m.Rating).Take(100).ToListAsync();
         return movies;
     }
+
+    public async Task<Guid> AddAsync(MovieEntity movie)
+    {
+        await _context.Movies.AddAsync(movie);
+        await _context.SaveChangesAsync();
+        return movie.Id;
+    }
+
+    public async Task<bool> UpdateAsync(MovieEntity movie)
+    {
+        var movieToUpdate = await _context.Movies.FirstOrDefaultAsync(m => m.Id == movie.Id);
+        if (movieToUpdate == null)
+        {
+            return false;
+        }
+        
+        _context.Movies.Update(movie);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public Task<bool> DeleteAsync(Guid id)
+    {
+        var movieToDelete = _context.Movies.FirstOrDefault(m => m.Id == id);
+        if (movieToDelete == null)
+        {
+            return Task.FromResult(false);
+        }
+        
+        _context.Movies.Remove(movieToDelete);
+        _context.SaveChanges();
+        return Task.FromResult(true);
+    }
 }
