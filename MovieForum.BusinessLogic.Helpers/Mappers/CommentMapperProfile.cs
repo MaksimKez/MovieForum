@@ -12,8 +12,6 @@ public class CommentMapperProfile : Profile
             .ForMember(dest => dest.User, opt => opt.Ignore())
             .ForMember(dest => dest.Review, opt => opt.Ignore());
 
-        CreateMap<CommentEntity, Comment>()
-            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-            .ForMember(dest => dest.ReviewId, opt => opt.MapFrom(src => src.ReviewId));
+        CreateMap<CommentEntity, Comment>();
     }
 }

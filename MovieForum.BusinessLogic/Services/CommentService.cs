@@ -1,11 +1,12 @@
 using AutoMapper;
 using MovieForum.BusinessLogic.Models;
+using MovieForum.BusinessLogic.Services.ServicesInterfaces;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Interfaces;
 
 namespace MovieForum.BusinessLogic.Services;
 
-public class CommentService
+public class CommentService : ICommentService
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IMapper _mapper;
@@ -62,27 +63,27 @@ public class CommentService
         return isDeleted;
     }
 
-    public async Task<IEnumerable<CommentEntity>> GetByDateAndUserIdAsync(Guid userId, DateTime from, DateTime to)
+    public async Task<IEnumerable<Comment>> GetByDateAndUserIdAsync(Guid userId, DateTime from, DateTime to)
     {
         var isInputValid = from < to && userId != Guid.Empty;
         if (!isInputValid)
         {
-            return new List<CommentEntity>();
+            return new List<Comment>();
         }
         
         var comments = await _commentRepository.GetByDateAndUserIdAsync(userId, from, to);
-        return comments;
+        return _mapper.Map<IEnumerable<Comment>>(comments);
     }
 
-    public async Task<IEnumerable<CommentEntity>> GetByDateAndByReviewIdAsync(Guid reviewId, DateTime from, DateTime to)
+    public async Task<IEnumerable<Comment>> GetByDateAndByReviewIdAsync(Guid reviewId, DateTime from, DateTime to)
     {
         var isInputValid = from < to && reviewId != Guid.Empty;
         if (!isInputValid)
         {
-            return new List<CommentEntity>();
+            return new List<Comment>();
         }
         
         var comments = await _commentRepository.GetByDateAndByReviewIdAsync(reviewId, from, to);
-        return comments;
+        return _mapper.Map<IEnumerable<Comment>>(comments);
     }
 }

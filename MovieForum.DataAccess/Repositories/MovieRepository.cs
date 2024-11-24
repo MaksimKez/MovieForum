@@ -20,7 +20,7 @@ public class MovieRepository : IMovieRepository
         return movie;
     }
 
-    public async Task<IEnumerable<MovieEntity>> GetByTitle(string title)
+    public async Task<IEnumerable<MovieEntity>> GetByTitleAsync(string title)
     {
         var movies = await _context.Movies.Where(m => m.Title.Contains(title)).ToListAsync();
         return movies;
