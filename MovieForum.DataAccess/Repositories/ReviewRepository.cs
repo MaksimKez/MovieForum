@@ -52,29 +52,29 @@ public class ReviewRepository : IReviewRepository
         return review.Id;
     }
 
-    public Task<bool> UpdateAsync(ReviewEntity review)
+    public async Task<bool> UpdateAsync(ReviewEntity review)
     {
-        var reviewToUpdate = _context.Reviews.FirstOrDefault(r => r.Id == review.Id);
+        var reviewToUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == review.Id);
         if (reviewToUpdate == null)
         {
-            return Task.FromResult(false);
+            return false;
         }
         
         _context.Reviews.Update(review);
-        _context.SaveChanges();
-        return Task.FromResult(true);
+        _context.SaveChangesAsync();
+        return true;
     }
 
-    public Task<bool> DeleteAsync(ReviewEntity review)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        var reviewToDelete = _context.Reviews.FirstOrDefault(r => r.Id == review.Id);
+        var reviewToDelete = await _context.Reviews.FirstOrDefaultAsync(r => r.Id == id);
         if (reviewToDelete == null)
         {
-            return Task.FromResult(false);
+            return false;
         }
         
         _context.Reviews.Remove(reviewToDelete);
-        _context.SaveChanges();
-        return Task.FromResult(true);
+        _context.SaveChangesAsync();
+        return true;
     }
 }

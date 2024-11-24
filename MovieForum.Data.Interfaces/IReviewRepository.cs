@@ -13,5 +13,5 @@ public interface IReviewRepository
     
     Task<Guid> AddAsync(ReviewEntity review);
     Task<bool> UpdateAsync(ReviewEntity review);
-    Task<bool> DeleteAsync(ReviewEntity review);
+    Task<bool> DeleteAsync(Guid id);
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieForum.BusinessLogic.Helpers.Mappers;
+using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
 using MovieForum.Data;
@@ -24,7 +25,8 @@ public class Program
         builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         
-        builder.Services.AddAutoMapper(typeof(CommentMapperProfile));
+        builder.Services.AddAutoMapper(typeof(CommentMapperProfile)
+            , typeof(MovieMapperProfile), typeof(ReviewMapperProfile));
 
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMovieService, MovieService>();
