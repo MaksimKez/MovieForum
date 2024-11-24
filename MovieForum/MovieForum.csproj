@@ -23,6 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\MovieForum.DataAccess\MovieForum.DataAccess.csproj" />
       <ProjectReference Include="..\MovieForum.Data\MovieForum.Data.csproj" />
     </ItemGroup>
 

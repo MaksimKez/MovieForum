@@ -73,7 +73,7 @@ public class CommentRepository : ICommentRepository
         return FilterByDate(comments, from, to);
     }
 
-    public async Task<IEnumerable<CommentEntity>> GetByReviewIdAsync(Guid reviewId, DateTime from, DateTime to)
+    public async Task<IEnumerable<CommentEntity>> GetByDateAndByReviewIdAsync(Guid reviewId, DateTime from, DateTime to)
     {
         var comments = await _context.Comments.Where(c => c.ReviewId == reviewId).ToListAsync();
         

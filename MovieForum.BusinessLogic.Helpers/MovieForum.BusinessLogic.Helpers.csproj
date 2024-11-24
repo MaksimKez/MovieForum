@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MovieForum.Data.Interfaces\MovieForum.Data.Interfaces.csproj" />
-      <ProjectReference Include="..\MovieForum.Data\MovieForum.Data.csproj" />
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <ProjectReference Include="..\MovieForum.BusinessLogic\MovieForum.BusinessLogic.csproj" />
+      <ProjectReference Include="..\MovieForum.Data\MovieForum.Data.csproj" />
     </ItemGroup>
 
 </Project>

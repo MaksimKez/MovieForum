@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieForum.Data;
+using MovieForum.Data.Interfaces;
+using MovieForum.DataAccess.Repositories;
 
 namespace MovieForum;
 
@@ -13,6 +15,11 @@ public class Program
         {
             x.UseNpgsql(builder.Configuration.GetConnectionString("ExpenseTrackerDb"));
         });
+
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+        builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         // Add services to the container.
         builder.Services.AddAuthorization();
