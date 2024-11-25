@@ -9,7 +9,7 @@ public interface IUserRepository
     Task<IEnumerable<UserEntity>> GetByUsernameAsync(string username);
     Task<UserEntity> GetByEmailAsync(string email);
     
-    Task AddAsync(UserEntity user);
+    Task<Guid> AddAsync(UserEntity user);
     Task<bool> UpdateAsync(UserEntity user);
-    Task<bool> DeleteAsync(UserEntity user);
+    Task<bool> DeleteAsync(Guid id);
 }

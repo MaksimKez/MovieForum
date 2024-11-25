@@ -26,10 +26,12 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         
         builder.Services.AddAutoMapper(typeof(CommentMapperProfile)
-            , typeof(MovieMapperProfile), typeof(ReviewMapperProfile));
+            , typeof(MovieMapperProfile), typeof(ReviewMapperProfile), typeof(UserMapperProfile));
 
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMovieService, MovieService>();
+        builder.Services.AddScoped<IReviewService, ReviewService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         // Add services to the container.
         builder.Services.AddAuthorization();

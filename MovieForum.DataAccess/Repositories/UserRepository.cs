@@ -32,10 +32,11 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task AddAsync(UserEntity user)
+    public async Task<Guid> AddAsync(UserEntity user)
     {
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
+        return user.Id; 
     }
 
     public async Task<bool> UpdateAsync(UserEntity user)
@@ -51,9 +52,9 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<bool> DeleteAsync(UserEntity user)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        var userToDelete = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+        var userToDelete = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (userToDelete == null)
         {
             return false;
