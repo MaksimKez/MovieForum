@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieForum.BusinessLogic.Helpers.Mappers;
-using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
 using MovieForum.BusinessLogic.Validators;
@@ -28,7 +26,7 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         
         builder.Services.AddAutoMapper(typeof(CommentMapperProfile)
-            , typeof(MovieMapperProfile), typeof(ReviewMapperProfile), typeof(UserMapperProfile));
+            ,typeof(MovieMapperProfile), typeof(ReviewMapperProfile), typeof(UserMapperProfile));
 
         builder.Services.AddTransient<UserValidator>();
         builder.Services.AddTransient<CommentValidator>();
@@ -40,9 +38,10 @@ public class Program
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IUserService, UserService>();
 
-        // Add services to the container.
         builder.Services.AddAuthorization();
 
+        builder.Services.AddControllers();
+        
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
