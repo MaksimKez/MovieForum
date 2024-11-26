@@ -1,6 +1,7 @@
 using AutoMapper;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Entities.Enums;
 using MovieForum.Data.Interfaces;
@@ -11,11 +12,13 @@ public class ReviewService : IReviewService
 {
     private readonly IReviewRepository _repository;
     private readonly IMapper _mapper;
+    private readonly ReviewValidator _validator;
 
-    public ReviewService(IReviewRepository repository, IMapper mapper)
+    public ReviewService(IReviewRepository repository, IMapper mapper, ReviewValidator validator)
     {
         _repository = repository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task<Review?> GetByIdAsync(Guid id)
@@ -95,7 +98,12 @@ public class ReviewService : IReviewService
     
     public async Task<Guid> AddAsync(Review review)
     {
-        //todo validation
+        var validationResult = await _validator.ValidateAsync(review);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return Guid.Empty;
+        }
         var reviewEntity = _mapper.Map<ReviewEntity>(review);
         var id = await _repository.AddAsync(reviewEntity);
         if (id.Equals(Guid.Empty))
@@ -119,8 +127,14 @@ public class ReviewService : IReviewService
     
     public async Task<bool> UpdateAsync(Review review)
     {
+        var validationResult = await _validator.ValidateAsync(review);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return false;
+        }
+        
         var reviewEntity = _mapper.Map<ReviewEntity>(review);
-        var isUpdated = await _repository.UpdateAsync(reviewEntity);
-        return isUpdated;
+        return await _repository.UpdateAsync(reviewEntity);
     }
 }

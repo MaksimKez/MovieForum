@@ -33,6 +33,7 @@ public class Program
         builder.Services.AddTransient<UserValidator>();
         builder.Services.AddTransient<CommentValidator>();
         builder.Services.AddTransient<MovieValidator>();
+        builder.Services.AddTransient<ReviewValidator>();
         
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMovieService, MovieService>();

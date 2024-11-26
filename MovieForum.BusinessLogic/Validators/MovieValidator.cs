@@ -20,7 +20,6 @@ public class MovieValidator : AbstractValidator<Movie>
         RuleFor(m => m.Rating).InclusiveBetween(0, 10).WithMessage("Rating must be between 0 and 10.");
         
         RuleFor(m => m.AgeLimit).NotEmpty().WithMessage("Age limit is required.")
-            .Must(age => Enum.IsDefined(typeof(AgeLimitEnum), age))
-            .WithMessage("AgeLimit must be a valid value from the AgeLimitEnum enum");
+            .IsInEnum().WithMessage("AgeLimit must be a valid value from the AgeLimitEnum enum");
     }
 }
