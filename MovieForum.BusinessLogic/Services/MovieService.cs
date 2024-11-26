@@ -1,6 +1,7 @@
 using AutoMapper;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Interfaces;
 
@@ -10,11 +11,13 @@ public class MovieService : IMovieService
 {
     private readonly IMovieRepository _movieRepository;
     private readonly IMapper _mapper;
+    private readonly MovieValidator _movieValidator;
 
-    public MovieService(IMovieRepository movieRepository, IMapper mapper)
+    public MovieService(IMovieRepository movieRepository, IMapper mapper, MovieValidator movieValidator)
     {
         _movieRepository = movieRepository;
         _mapper = mapper;
+        _movieValidator = movieValidator;
     }
     
     public async Task<Movie?> GetByIdAsync(Guid id)
@@ -75,7 +78,12 @@ public class MovieService : IMovieService
     
     public async Task<Guid> AddAsync(Movie movie)
     {
-        //todo add validation
+        var validationResult = await _movieValidator.ValidateAsync(movie);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return Guid.Empty;
+        }
         
         var movieEntity = _mapper.Map<MovieEntity>(movie);
         return await _movieRepository.AddAsync(movieEntity);
@@ -83,7 +91,12 @@ public class MovieService : IMovieService
     
     public async Task<bool> UpdateAsync(Movie movie)
     {
-        //todo add validation
+        var validationResult = await _movieValidator.ValidateAsync(movie);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return false;
+        }
         
         var movieEntity = _mapper.Map<MovieEntity>(movie);
         return await _movieRepository.UpdateAsync(movieEntity);
