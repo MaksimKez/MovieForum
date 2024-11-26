@@ -52,6 +52,8 @@ public class MovieRepository : IMovieRepository
 
     public async Task<Guid> AddAsync(MovieEntity movie)
     {
+        movie.Id = Guid.NewGuid();
+        
         await _context.Movies.AddAsync(movie);
         await _context.SaveChangesAsync();
         return movie.Id;

@@ -34,6 +34,9 @@ public class UserRepository : IUserRepository
 
     public async Task<Guid> AddAsync(UserEntity user)
     {
+        user.Id = Guid.NewGuid();
+        user.CreatedAt = DateTime.Now;
+        
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
         return user.Id; 

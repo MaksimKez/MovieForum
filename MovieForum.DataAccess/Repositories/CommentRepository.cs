@@ -28,6 +28,9 @@ public class CommentRepository : ICommentRepository
 
     public async Task<Guid> AddAsync(CommentEntity comment)
     {
+        comment.Id = Guid.NewGuid();
+        comment.PublishedAt = DateTime.UtcNow;
+        
         await _context.Comments.AddAsync(comment);
         await _context.SaveChangesAsync();
         return comment.Id;

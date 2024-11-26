@@ -47,6 +47,9 @@ public class ReviewRepository : IReviewRepository
 
     public async Task<Guid> AddAsync(ReviewEntity review)
     {
+        review.Id = Guid.NewGuid();
+        review.PublishDate = DateTime.UtcNow;
+        
         await _context.Reviews.AddAsync(review);
         await _context.SaveChangesAsync();
         return review.Id;
