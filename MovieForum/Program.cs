@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieForum.BusinessLogic.Helpers.Mappers;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data;
 using MovieForum.Data.Interfaces;
 using MovieForum.DataAccess.Repositories;
@@ -28,6 +30,9 @@ public class Program
         builder.Services.AddAutoMapper(typeof(CommentMapperProfile)
             , typeof(MovieMapperProfile), typeof(ReviewMapperProfile), typeof(UserMapperProfile));
 
+        builder.Services.AddTransient<UserValidator>();
+        builder.Services.AddTransient<CommentValidator>();
+        
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();

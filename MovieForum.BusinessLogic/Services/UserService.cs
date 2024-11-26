@@ -1,6 +1,7 @@
 using AutoMapper;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Interfaces;
 
@@ -10,11 +11,13 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository; 
     private readonly IMapper _mapper;
+    private readonly UserValidator _validator;
     
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IMapper mapper, UserValidator validator)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
@@ -50,7 +53,12 @@ public class UserService : IUserService
 
     public async Task<Guid> AddAsync(User user)
     {
-        //todo validation
+        var validationResult = await _validator.ValidateAsync(user);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return Guid.Empty; 
+        }
         var userEntity = _mapper.Map<UserEntity>(user);
         var id = await _userRepository.AddAsync(userEntity);
         if (id.Equals(Guid.Empty))
@@ -62,11 +70,16 @@ public class UserService : IUserService
         return id;
     }
 
-    public Task<bool> UpdateAsync(User user)
-    {
-        //todo validation
+    public async Task<bool> UpdateAsync(User user)
+    { 
+        var validationResult = await _validator.ValidateAsync(user);   
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return false;
+        }
         var userEntity = _mapper.Map<UserEntity>(user);
-        return _userRepository.UpdateAsync(userEntity);
+        return await _userRepository.UpdateAsync(userEntity);
     }
 
     public async Task<bool> DeleteAsync(Guid id)

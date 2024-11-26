@@ -1,6 +1,7 @@
 using AutoMapper;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Interfaces;
 
@@ -10,11 +11,13 @@ public class CommentService : ICommentService
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IMapper _mapper;
+    private readonly CommentValidator _validator;
 
-    public CommentService(ICommentRepository commentRepository, IMapper mapper)
+    public CommentService(ICommentRepository commentRepository, IMapper mapper, CommentValidator validator)
     {
         _commentRepository = commentRepository;
         _mapper = mapper;
+        _validator = validator;
     }
 
     public async Task<Comment?> GetByIdAsync(Guid id)
@@ -36,25 +39,40 @@ public class CommentService : ICommentService
         }
         
         var comments = await _commentRepository.GetByIsPositiveStatusAndReviewIdAsync(isPositive, reviewId);
-        
         return _mapper.Map<IEnumerable<Comment>>(comments);
     }
     
     public async Task<Guid> AddAsync(Comment comment)
     {
-        //todo add validation
+        var validationResult = await _validator.ValidateAsync(comment);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return Guid.Empty;
+        }
         
         var commentEntity = _mapper.Map<CommentEntity>(comment);
-        return await _commentRepository.AddAsync(commentEntity);
+        var id = await _commentRepository.AddAsync(commentEntity);
+        if (id.Equals(Guid.Empty))
+        {
+            //todo log
+            return Guid.Empty;
+        }
+
+        return id;
     }
     
     public async Task<bool> UpdateAsync(Comment comment)
     {
-        //todo add validation
+        var validationResult = await _validator.ValidateAsync(comment);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return false;
+        }
         
         var commentEntity = _mapper.Map<CommentEntity>(comment);
-        var isUpdated = await _commentRepository.UpdateAsync(commentEntity);
-        return isUpdated;
+        return await _commentRepository.UpdateAsync(commentEntity);
     }
     
     public async Task<bool> DeleteAsync(Guid id)
