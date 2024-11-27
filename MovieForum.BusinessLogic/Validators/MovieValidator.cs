@@ -1,6 +1,7 @@
 using FluentValidation;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.Data.Entities.Enums;
+using static System.DateTime;
 
 namespace MovieForum.BusinessLogic.Validators;
 
@@ -21,5 +22,7 @@ public class MovieValidator : AbstractValidator<Movie>
         
         RuleFor(m => m.AgeLimit).NotEmpty().WithMessage("Age limit is required.")
             .IsInEnum().WithMessage("AgeLimit must be a valid value from the AgeLimitEnum enum");
-    }
+        
+        RuleFor(c => c.ReleaseDate)
+            .Must(be => be <= DateTime.Now).WithMessage("PublishedAt must be a date in the past");    }
 }
