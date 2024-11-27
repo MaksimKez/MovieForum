@@ -10,4 +10,5 @@ public class Movie
     public string Description { get; set; }
     public double Rating { get; set; }
     public AgeLimitEnum AgeLimit { get; set; }
+    public DateTime ReleaseDate { get; set; }
 }
