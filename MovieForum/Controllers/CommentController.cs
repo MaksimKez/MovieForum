@@ -5,7 +5,7 @@ using MovieForum.BusinessLogic.Services.ServicesInterfaces;
 namespace MovieForum.Controllers;
 
 [ApiController]
-[Route("api/comments")] // Общий базовый маршрут для контроллера
+[Route("api/comments")]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
@@ -16,6 +16,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("{id:guid}", Name = "GetCommentById")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Comment>> Get(Guid id)
     {
         var comment = await _commentService.GetByIdAsync(id);
@@ -28,6 +30,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("filter-by-status-and-review/{isPositive}/{reviewId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Comment>>> GetByIsPositiveStatusAndReviewId(bool isPositive, Guid reviewId)
     {
         var comments = await _commentService.GetByIsPositiveStatusAndReviewIdAsync(isPositive, reviewId);
@@ -40,6 +44,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("filter-by-date-and-review/{reviewId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Comment>>> GetByDateAndByReviewId(Guid reviewId, DateTime from, DateTime to)
     {
         var comments = await _commentService.GetByDateAndByReviewIdAsync(reviewId, from, to);
@@ -52,6 +58,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpGet("filter-by-date-and-user/{userId:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IEnumerable<Comment>>> GetByDateAndUserId(Guid userId, DateTime from, DateTime to)
     {
         var comments = await _commentService.GetByDateAndUserIdAsync(userId, from, to);
@@ -64,6 +72,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Guid>> Add(Comment comment)
     {
         var id = await _commentService.AddAsync(comment);
@@ -80,6 +90,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpPut]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Update(Comment comment)
     {
         var isUpdated = await _commentService.UpdateAsync(comment);
@@ -92,6 +104,8 @@ public class CommentController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> Delete(Guid id)
     {
         var isDeleted = await _commentService.DeleteAsync(id);
