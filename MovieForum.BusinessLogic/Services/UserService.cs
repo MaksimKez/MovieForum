@@ -1,4 +1,5 @@
 using AutoMapper;
+using MovieForum.BusinessLogic.auth.Interfaces;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
 using MovieForum.BusinessLogic.Validators;
@@ -12,12 +13,14 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository; 
     private readonly IMapper _mapper;
     private readonly UserValidator _validator;
+    private readonly IPasswordHasher _passwordHasher; 
     
-    public UserService(IUserRepository userRepository, IMapper mapper, UserValidator validator)
+    public UserService(IUserRepository userRepository, IMapper mapper, UserValidator validator, IPasswordHasher passwordHasher)
     {
         _userRepository = userRepository;
         _mapper = mapper;
         _validator = validator;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<User?> GetByIdAsync(Guid id)
@@ -60,6 +63,17 @@ public class UserService : IUserService
             return Guid.Empty; 
         }
         var userEntity = _mapper.Map<UserEntity>(user);
+        var salt = _passwordHasher.GenerateSalt(16);
+        if (user.PasswordHash == null)
+        {
+            // logic for google auth
+            return Guid.Empty;
+        }
+
+        var hashedPassword = _passwordHasher.HashPassword(user.PasswordHash, salt);
+        
+        userEntity.PasswordHash = hashedPassword;
+        userEntity.PasswordSalt = salt;
         var id = await _userRepository.AddAsync(userEntity);
         if (id.Equals(Guid.Empty))
         {
