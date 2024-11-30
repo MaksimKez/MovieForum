@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using MovieForum.BusinessLogic.auth;
+using MovieForum.BusinessLogic.auth.Interfaces;
 using MovieForum.BusinessLogic.Helpers.Mappers;
 using MovieForum.BusinessLogic.Services;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
@@ -37,6 +39,10 @@ public class Program
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IUserService, UserService>();
+
+        builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+        
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddAuthorization();
 
