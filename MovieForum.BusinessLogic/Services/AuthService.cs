@@ -1,5 +1,4 @@
 using AutoMapper;
-using MovieForum.BusinessLogic.auth;
 using MovieForum.BusinessLogic.auth.Interfaces;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
@@ -11,11 +10,11 @@ namespace MovieForum.BusinessLogic.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly PasswordHasher _passwordHasher;
+    private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
     private readonly IJwtProvider _jwtProvider;
 
-    public AuthService(IUserRepository userRepository, PasswordHasher passwordHasher, IMapper mapper, IJwtProvider jwtProvider)
+    public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, IMapper mapper, IJwtProvider jwtProvider)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -50,7 +49,8 @@ public class AuthService : IAuthService
             //todo log
             return null;
         }
-        var isValidPassword = _passwordHasher.VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
+        //var isValidPassword = _passwordHasher.VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
+        var isValidPassword = _passwordHasher.VerifyPassword(password, user.PasswordHash);
 
         if (!isValidPassword)
         {

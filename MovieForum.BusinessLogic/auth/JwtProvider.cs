@@ -11,20 +11,22 @@ public class JwtProvider : IJwtProvider
     public string GenerateJwtToken(string email, Guid userId)
     {
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey("superSecretKey@345"u8.ToArray()),
-            SecurityAlgorithms.Sha256);
-        
+            new SymmetricSecurityKey("superSecretKey@345superSecretKey@345"u8.ToArray()),
+            SecurityAlgorithms.HmacSha256 // Используем HmacSha256 вместо Sha256
+        );
+
         var claims = new[]
         {
             new Claim("Email", email),
             new Claim("UserId", userId.ToString())
         };
-        
+
         var token = new JwtSecurityToken(
             claims: claims,
             expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: signingCredentials);
-        
+            signingCredentials: signingCredentials
+        );
+
         var tokenHandler = new JwtSecurityTokenHandler();
         return tokenHandler.WriteToken(token);
     }

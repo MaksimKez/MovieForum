@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MovieForum.BusinessLogic.auth;
 using MovieForum.BusinessLogic.auth.Interfaces;
 using MovieForum.BusinessLogic.Helpers.Mappers;
@@ -35,17 +38,30 @@ public class Program
         builder.Services.AddTransient<MovieValidator>();
         builder.Services.AddTransient<ReviewValidator>();
         
+        builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
         builder.Services.AddScoped<ICommentService, CommentService>();
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IUserService, UserService>();
-
+        
         builder.Services.AddScoped<IJwtProvider, JwtProvider>();
         
         builder.Services.AddScoped<IAuthService, AuthService>();
-
+        
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey("superSecretKey@345superSecretKey@345"u8.ToArray()),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+        
         builder.Services.AddAuthorization();
-
         builder.Services.AddControllers();
         
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -66,6 +82,7 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
+        app.UseAuthentication();
 
         app.Run();
     }

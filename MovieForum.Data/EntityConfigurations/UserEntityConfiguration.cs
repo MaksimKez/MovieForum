@@ -19,6 +19,8 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(u => u.Email)
             .IsRequired()
             .HasMaxLength(255);
+
+        builder.Property(u => u.CreatedAt).IsRequired();
         
         builder.Property(u => u.CreatedAt).IsRequired();
         

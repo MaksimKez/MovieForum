@@ -17,7 +17,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Guid>> Login([FromBody] UserLogInDto request)
+    public async Task<ActionResult<string>> Login([FromBody] UserLogInDto request)
     {
         var token = await _service.LoginAsync(request.Email, request.Password);
         if (string.IsNullOrEmpty(token))
