@@ -27,7 +27,7 @@ public class AuthService : IAuthService
     {
         if (user.PasswordHash == null)
         {
-            //logic for o auth
+            //logic for oauth
             return false;
         }
         
