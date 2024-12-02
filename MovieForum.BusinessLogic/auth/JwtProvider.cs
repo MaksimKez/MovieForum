@@ -12,7 +12,7 @@ public class JwtProvider : IJwtProvider
     {
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey("superSecretKey@345superSecretKey@345"u8.ToArray()),
-            SecurityAlgorithms.HmacSha256 // Используем HmacSha256 вместо Sha256
+            SecurityAlgorithms.HmacSha256
         );
 
         var claims = new[]
@@ -23,7 +23,7 @@ public class JwtProvider : IJwtProvider
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddDays(1),
             signingCredentials: signingCredentials
         );
 
