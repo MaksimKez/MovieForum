@@ -2,6 +2,7 @@ using AutoMapper;
 using MovieForum.BusinessLogic.auth.Interfaces;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
+using MovieForum.BusinessLogic.Validators;
 using MovieForum.Data.Entities;
 using MovieForum.Data.Interfaces;
 
@@ -13,6 +14,7 @@ public class AuthService : IAuthService
     private readonly IPasswordHasher _passwordHasher;
     private readonly IMapper _mapper;
     private readonly IJwtProvider _jwtProvider;
+    private readonly UserValidator _validator;
 
     public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, IMapper mapper, IJwtProvider jwtProvider)
     {
@@ -30,12 +32,21 @@ public class AuthService : IAuthService
             return false;
         }
         
+        var validationResult = await _validator.ValidateAsync(user);
+        if (!validationResult.IsValid)
+        {
+            //todo log
+            return false;
+        }
+        
         var userEntity = _mapper.Map<UserEntity>(user);
         
         var salt = _passwordHasher.GenerateSalt(16);
         var hashedPassword = _passwordHasher.HashPassword(user.PasswordHash, salt);
         userEntity.PasswordHash = hashedPassword;
         userEntity.PasswordSalt = salt;
+        
+        
         
         var id = await _userRepository.AddAsync(userEntity);
         return id != Guid.Empty;

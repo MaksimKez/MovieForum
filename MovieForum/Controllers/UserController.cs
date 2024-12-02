@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieForum.BusinessLogic.Models;
 using MovieForum.BusinessLogic.Services.ServicesInterfaces;
@@ -43,6 +44,7 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
+    [Authorize]
     [HttpGet("search-by-email/{email}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

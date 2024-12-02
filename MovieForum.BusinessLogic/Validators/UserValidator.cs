@@ -18,8 +18,8 @@ public class UserValidator : AbstractValidator<User>
         RuleFor(u => u.PasswordHash)
             .NotEmpty().When(u => string.IsNullOrEmpty(u.GoogleId)).WithMessage("Password is required");
 
-        RuleFor(u => u.PasswordSalt)
-            .NotEmpty().When(u => string.IsNullOrEmpty(u.GoogleId)).WithMessage("Password salt is required");
+        //RuleFor(u => u.PasswordSalt)
+            //.NotEmpty().When(u => string.IsNullOrEmpty(u.GoogleId)).WithMessage("Password salt is required");
 
         RuleFor(u => u.GoogleId).NotEmpty()
             .When(u => string.IsNullOrEmpty(u.PasswordHash) && string.IsNullOrEmpty(u.PasswordSalt))

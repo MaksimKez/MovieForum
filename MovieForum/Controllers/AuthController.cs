@@ -31,9 +31,16 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Register([FromBody] User request)
+    public async Task<ActionResult> Register([FromBody] UserRegistrationDto request)
     {
-        var isSuccess = await _service.RegisterAsync(request);
+        var isSuccess = await _service.RegisterAsync(new User
+            {
+                Email = request.Email,
+                PasswordHash = request.Password,
+                Username = request.Username,
+                FullName = request.FullName
+            });
+        
         if (!isSuccess)
         {
             return BadRequest("Unable to register the user.");
