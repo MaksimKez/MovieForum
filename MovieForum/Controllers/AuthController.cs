@@ -25,7 +25,16 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid email or password.");
         }
         
-        return Ok(token);
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = false,   //as it is just a pet project, no need to set HttpOnly 
+            Secure = false,     // and secure, but in real life, it should be true
+            SameSite = SameSiteMode.None, //SameSiteMode.Strict , same for this
+            Expires = DateTime.UtcNow.AddMinutes(15)
+        };
+        Response.Cookies.Append("AccessToken", token, cookieOptions);
+        
+        return Ok(new { Message = "Tokens refreshed successfully" });
     }
     
     [HttpPost("register")]
