@@ -12,4 +12,6 @@ public interface IUserRepository
     Task<Guid> AddAsync(UserEntity user);
     Task<bool> UpdateAsync(UserEntity user);
     Task<bool> DeleteAsync(Guid id);
+    Task<bool> AddRefreshTokenAsync(Guid userId, string refreshToken);
+    Task<string?> GetRefreshTokenAsync(Guid userId);
 }

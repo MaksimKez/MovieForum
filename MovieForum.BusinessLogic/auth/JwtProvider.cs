@@ -8,10 +8,14 @@ namespace MovieForum.BusinessLogic.auth;
 
 public class JwtProvider : IJwtProvider
 {
-    public string GenerateJwtToken(string email, Guid userId)
+    private readonly string _secretKey = "superSecretKey@345superSecretKey@345";
+    private readonly TimeSpan _accessTokenLifetime = TimeSpan.FromMinutes(15);
+    private readonly TimeSpan _refreshTokenLifetime = TimeSpan.FromDays(7);
+
+    public string GenerateJwtToken(string email, Guid userId, bool isRefreshToken = false)
     {
         var signingCredentials = new SigningCredentials(
-            new SymmetricSecurityKey("superSecretKey@345superSecretKey@345"u8.ToArray()),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
             SecurityAlgorithms.HmacSha256
         );
 
@@ -21,9 +25,13 @@ public class JwtProvider : IJwtProvider
             new Claim("UserId", userId.ToString())
         };
 
+        var expiration = isRefreshToken
+            ? DateTime.UtcNow.Add(_refreshTokenLifetime)
+            : DateTime.UtcNow.Add(_accessTokenLifetime);
+
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(1),
+            expires: expiration,
             signingCredentials: signingCredentials
         );
 
@@ -31,13 +39,14 @@ public class JwtProvider : IJwtProvider
         return tokenHandler.WriteToken(token);
     }
 
+
     public bool ValidateJwtToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey("superSecretKey@345"u8.ToArray()),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey)),
             ValidateIssuer = false,
             ValidateAudience = false,
             ClockSkew = TimeSpan.Zero
@@ -54,3 +63,4 @@ public class JwtProvider : IJwtProvider
         }
     }
 }
+

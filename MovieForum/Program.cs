@@ -24,6 +24,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Настройка подключения к базе данных
         builder.Services.AddDbContext<ApplicationDbContext>(x =>
         {
             x.UseNpgsql(builder.Configuration.GetConnectionString("ExpenseTrackerDb"));
@@ -37,6 +38,9 @@ public class Program
         builder.Services.AddAutoMapper(typeof(CommentMapperProfile), 
             typeof(MovieMapperProfile), typeof(ReviewMapperProfile), typeof(UserMapperProfile));
 
+        builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
+        
         builder.Services.AddTransient<UserValidator>();
         builder.Services.AddTransient<CommentValidator>();
         builder.Services.AddTransient<MovieValidator>();
@@ -47,9 +51,6 @@ public class Program
         builder.Services.AddScoped<IMovieService, MovieService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<IUserService, UserService>();
-
-        builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -65,6 +66,12 @@ public class Program
             });
 
         builder.Services.AddAuthorization();
+
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(15);
+        });
 
         builder.Services.AddControllers();
 
