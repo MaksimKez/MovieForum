@@ -23,7 +23,6 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TokensModel>> Login([FromBody] UserLogInDto request)
     {
-        // Получаем токены через сервис
         var tokens = await _service.LoginAsync(request.Email, request.Password);
 
         if (tokens == null)
@@ -31,7 +30,6 @@ public class AuthController : ControllerBase
             return BadRequest("Invalid email or password.");
         }
 
-        // Сохраняем AccessToken в куки с ограничением на 15 минут
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
@@ -40,6 +38,12 @@ public class AuthController : ControllerBase
             Expires = DateTime.UtcNow.AddMinutes(15)
         };
 
+        if (tokens.RefreshToken == null || tokens.AccessToken == null)
+        {
+            // todo log
+            return new TokensModel();
+        }
+        
         Response.Cookies.Append("AccessToken", tokens.AccessToken, cookieOptions);
 
         cookieOptions.Expires = DateTime.UtcNow.AddDays(7);
