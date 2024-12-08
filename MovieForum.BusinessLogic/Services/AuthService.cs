@@ -55,7 +55,7 @@ public class AuthService : IAuthService
         return id != Guid.Empty;
     }
 
-    public async Task<TokensModel> LoginAsync(string email, string password)
+    public async Task<TokensModel?> LoginAsync(string email, string password)
     {
         var user = await _userRepository.GetByEmailAsync(email);
         if (user?.PasswordHash == null || user.PasswordSalt == null)
@@ -76,8 +76,12 @@ public class AuthService : IAuthService
         var refreshToken = _jwtProvider.GenerateJwtToken(user.Email, user.Id, isRefreshToken: true);
 
         //todo add refresh token to user
-        await _userRepository.AddRefreshTokenAsync(user.Id, refreshToken);
-        
+        var result = await _userRepository.AddRefreshTokenAsync(user.Id, refreshToken);
+        if (!result)
+        {
+            // todo log
+            return null;
+        }
 
         return new TokensModel
         {

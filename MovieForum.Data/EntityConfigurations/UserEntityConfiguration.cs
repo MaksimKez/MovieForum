@@ -22,8 +22,6 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder.Property(u => u.CreatedAt).IsRequired();
         
-        builder.Property(u => u.CreatedAt).IsRequired();
-        
         builder.HasMany(u => u.Comments)
             .WithOne(c => c.User)
             .HasForeignKey(c => c.UserId)

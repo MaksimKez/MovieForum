@@ -47,8 +47,7 @@ public class AuthController : ControllerBase
 
         return Ok(new { Message = "Login successful", Tokens = tokens });
     }
-
-    // Метод для регистрации пользователя
+    
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

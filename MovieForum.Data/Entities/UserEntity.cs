@@ -14,7 +14,7 @@ public class UserEntity
     
     public string? PasswordHash { get; set; }
     public string? PasswordSalt { get; set; }
-    
+    public string? RefreshToken { get; set; }    
     public string? GoogleId { get; set; }
     public string? FullName { get; set; }
 }
